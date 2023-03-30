@@ -20,6 +20,15 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > "$HOME/.ssh/SSH_PRIVATE_KEY"
           chmod 600 "$HOME/.ssh/SSH_PRIVATE_KEY"
 
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: 92.255.109.65
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script_stop: true
+          script: ls -all
       - name: run docker compose
         run: |
           echo "StrictHostKeyChecking no" >> $(find /etc -iname ssh_config)
