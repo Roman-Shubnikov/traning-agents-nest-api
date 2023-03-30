@@ -35,7 +35,6 @@ jobs:
             docker compose --env-file=.env.production up --build -d
             cd ..
             rm -rf traning-agents-nest-api
-
       # - name: run docker compose
       #   run: |
       #     echo "StrictHostKeyChecking no" >> $(find /etc -iname ssh_config)
