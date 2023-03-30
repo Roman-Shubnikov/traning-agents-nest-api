@@ -19,6 +19,7 @@ jobs:
           mkdir "$HOME/.ssh"
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > "$HOME/.ssh/SSH_PRIVATE_KEY"
           chmod 600 "$HOME/.ssh/SSH_PRIVATE_KEY"
+          eval `ssh-agent -s`
           ssh-add $HOME/.ssh/SSH_PRIVATE_KEY
 
       - name: run docker compose
