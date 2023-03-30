@@ -22,6 +22,7 @@ jobs:
 
       - name: run docker compose
         run: |
+          echo "StrictHostKeyChecking no" >> $(find /etc -iname ssh_config)
           eval `ssh-agent -s`
           ssh-add -k $HOME/.ssh/SSH_PRIVATE_KEY
           echo $PRODUCTION_ENV | base64 -d > .env.production
