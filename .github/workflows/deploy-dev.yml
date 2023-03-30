@@ -1,0 +1,32 @@
+name: Deploy dev backend
+
+concurrency: dev
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: clone repo
+        uses: actions/checkout@v3
+
+      - uses: LuisEnMarroquin/setup-ssh-action@v2.0.0
+        with:
+          ORIGIN: bagov-net.ru
+          SSHKEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          NAME: dev
+          USER: root
+
+      - name: run docker compose
+        run: |
+          echo $DEV_ENV | base64 -d > .env.dev
+          docker context create --docker host=ssh://dev dev
+          docker context use dev
+          docker compose --env-file=.env.dev -p travel-dev up backend --build -d
+        env:
+          DEV_ENV: ${{ secrets.DEV_ENV }}

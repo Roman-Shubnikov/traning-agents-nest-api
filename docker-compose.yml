@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    restart: always
+    environment:
+      
+      ADMIN_USERS: ${ADMIN_USERS:?you forgot set ADMIN_USERS}
+      WEB_SERVICE_PORT: ${WEB_SERVICE_PORT:?you forgot set WEB_SERVICE_PORT}
+      VK_MINIAPP_TOKEN: ${VK_MINIAPP_TOKEN:?you forgot set VK_MINIAPP_TOKEN}
+      VK_API_URL: https://api.vkontakte.ru/method/
+      VK_API_VERSION: ${VK_API_VERSION:?you forgot set VK_API_VERSION}
+      COMMUNITY_VK_ID: ${VK_API_VERSION:?you forgot set COMMUNITY_VK_ID}
+      VK_SECRET: ${VK_API_VERSION:?you forgot set VK_SECRET}
+
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_USERNAME: ${DB_USERNAME:-root}
+      DB_PASSWORD: ${DB_PASSWORD:-password}
+      DB_DATABASE: ${DB_DATABASE:-roadjedi}
+      DB_MAX_ELEMENTS_PER_QUERY: ${DB_DATABASE:-100}
+
+      S3_HOST: ${S3_HOST:-s3}
+      S3_PORT: ${S3_PORT:-443}
+      S3_ROOT_USER: ${S3_ROOT_USER:-user}
+      S3_ROOT_PASSWORD: ${S3_ROOT_PASSWORD:-password}
+      S3_STORAGE_BUCKET: ${S3_STORAGE_BUCKET:-bucket}
+      S3_REGION: ${S3_REGION:-ru-1}
+      
+      NODE_ENV: ${NODE_ENV:-development}
+      SWAGGER_THEME: ${SWAGGER_THEME}
+      MARKET_COST_INSTALL_NEW_AVATAR: ${MARKET_COST_INSTALL_NEW_AVATAR:-250}
+      MARKET_COST_INSTALL_NEW_NICKNAME: ${MARKET_COST_INSTALL_NEW_NICKNAME:-1500}
+      MARKET_COST_COLOR: ${MARKET_COST_COLOR:-800}
+      MARKET_COST_ICON: ${MARKET_COST_ICON:-1200}
+    ports:
+      - '${WEB_SERVICE_PORT:-3003}:${WEB_SERVICE_PORT:-3003}'
