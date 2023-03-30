@@ -28,15 +28,22 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script_stop: true
-          script: ls -all
-      - name: run docker compose
-        run: |
-          echo "StrictHostKeyChecking no" >> $(find /etc -iname ssh_config)
-          eval `ssh-agent -s`
-          ssh-add -k $HOME/.ssh/SSH_PRIVATE_KEY
-          echo $PRODUCTION_ENV | base64 -d > .env.production
-          docker context create --docker host=ssh://root@92.255.109.65 production
-          docker context use production
-          docker compose --env-file=.env.production up --build -d
-        env:
-          PRODUCTION_ENV: ${{ secrets.PRODUCTION_ENV }}
+          script: |
+            git clone https://github.com/Roman-Shubnikov/traning-agents-nest-api.git
+            cd traning-agents-nest-api
+            echo ${{ secrets.PRODUCTION_ENV }} | base64 -d > .env.production
+            docker compose --env-file=.env.production up --build -d
+            cd ..
+            rm -rf traning-agents-nest-api
+
+      # - name: run docker compose
+      #   run: |
+      #     echo "StrictHostKeyChecking no" >> $(find /etc -iname ssh_config)
+      #     eval `ssh-agent -s`
+      #     ssh-add -k $HOME/.ssh/SSH_PRIVATE_KEY
+      #     echo $PRODUCTION_ENV | base64 -d > .env.production
+      #     docker context create --docker host=ssh://root@92.255.109.65 production
+      #     docker context use production
+      #     docker compose --env-file=.env.production up --build -d
+      #   env:
+      #     PRODUCTION_ENV: ${{ secrets.PRODUCTION_ENV }}
