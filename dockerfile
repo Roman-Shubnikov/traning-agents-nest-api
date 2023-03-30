@@ -6,4 +6,4 @@ RUN yarn install
 COPY . .
 RUN yarn build
 EXPOSE 3003
-# CMD [ "node", "dist/main.js" ]
+RUN yarn start:prod

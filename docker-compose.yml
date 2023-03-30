@@ -4,6 +4,7 @@ services:
   backend:
     build: .
     restart: always
+    # tty: true
     environment:
       
       ADMIN_USERS: ${ADMIN_USERS:?you forgot set ADMIN_USERS}
