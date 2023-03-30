@@ -26,7 +26,7 @@ import { MarketModule } from './market/market.module';
       database: process.env.DB_DATABASE,
       synchronize: true,
       autoLoadEntities: true,
-      logging: true
+      // logging: true
     }),
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([UserEntity]),

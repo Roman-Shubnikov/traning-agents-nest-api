@@ -12,15 +12,15 @@ services:
       VK_MINIAPP_TOKEN: ${VK_MINIAPP_TOKEN:?you forgot set VK_MINIAPP_TOKEN}
       VK_API_URL: https://api.vkontakte.ru/method/
       VK_API_VERSION: ${VK_API_VERSION:?you forgot set VK_API_VERSION}
-      COMMUNITY_VK_ID: ${VK_API_VERSION:?you forgot set COMMUNITY_VK_ID}
-      VK_SECRET: ${VK_API_VERSION:?you forgot set VK_SECRET}
+      COMMUNITY_VK_ID: ${COMMUNITY_VK_ID:?you forgot set COMMUNITY_VK_ID}
+      VK_SECRET: ${VK_SECRET:?you forgot set VK_SECRET}
 
       DB_HOST: ${DB_HOST:-db}
       DB_PORT: ${DB_PORT:-5432}
       DB_USERNAME: ${DB_USERNAME:-root}
       DB_PASSWORD: ${DB_PASSWORD:-password}
       DB_DATABASE: ${DB_DATABASE:-roadjedi}
-      DB_MAX_ELEMENTS_PER_QUERY: ${DB_DATABASE:-100}
+      DB_MAX_ELEMENTS_PER_QUERY: ${DB_MAX_ELEMENTS_PER_QUERY:-100}
 
       S3_HOST: ${S3_HOST:-s3}
       S3_PORT: ${S3_PORT:-443}
