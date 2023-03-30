@@ -29,6 +29,8 @@ jobs:
           port: 22
           script_stop: true
           script: |
+            eval "$(ssh-agent -s)"
+            ssh-add /root/gh_keys/id_rsa
             git clone git@github.com:Roman-Shubnikov/traning-agents-nest-api.git
             cd traning-agents-nest-api
             echo ${{ secrets.PRODUCTION_ENV }} | base64 -d > .env.production
