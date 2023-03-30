@@ -19,11 +19,12 @@ jobs:
           mkdir "$HOME/.ssh"
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > "$HOME/.ssh/SSH_PRIVATE_KEY"
           chmod 600 "$HOME/.ssh/SSH_PRIVATE_KEY"
+          ssh-add $HOME/.ssh/SSH_PRIVATE_KEY
 
       - name: run docker compose
         run: |
           echo $PRODUCTION_ENV | base64 -d > .env.production
-          docker context create --docker host="ssh://root@92.255.109.65 -i $HOME/.ssh/SSH_PRIVATE_KEY -o StrictHostKeyChecking=no" production
+          docker context create --docker host=ssh://root@92.255.109.65 production
           docker context use production
           docker compose --env-file=.env.production up --build -d
         env:
