@@ -16,6 +16,7 @@ jobs:
 
       - name: Install SSH key
         run: |
+          mkdir "$HOME/.ssh"
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > "$HOME/.ssh/SSH_PRIVATE_KEY"
           chmod 600 "$HOME/.ssh/SSH_PRIVATE_KEY"
 
