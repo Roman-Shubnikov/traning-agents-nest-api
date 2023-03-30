@@ -14,17 +14,15 @@ jobs:
       - name: clone repo
         uses: actions/checkout@v3
 
-      - uses: LuisEnMarroquin/setup-ssh-action@v2.0.0
-        with:
-          ORIGIN: 92.255.109.65
-          SSHKEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          NAME: production
-          USER: root
+      - name: Install SSH key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > "$HOME/.ssh/SSH_PRIVATE_KEY"
+          chmod 600 "$HOME/.ssh/SSH_KEY"
 
       - name: run docker compose
         run: |
           echo $PRODUCTION_ENV | base64 -d > .env.production
-          docker context create --docker host=ssh://production production
+          docker context create --docker host="ssh://root@92.255.109.65 -i $HOME/.ssh/SSH_PRIVATE_KEY -o StrictHostKeyChecking=no" production
           docker context use production
           docker compose --env-file=.env.production up --build -d
         env:
