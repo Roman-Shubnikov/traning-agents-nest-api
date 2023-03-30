@@ -6,4 +6,4 @@ RUN yarn install
 COPY . .
 RUN yarn build
 EXPOSE 3003
-RUN yarn start:prod
+CMD [ "node", "dist/src/main" ]

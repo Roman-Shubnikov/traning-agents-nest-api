@@ -34,8 +34,8 @@ jobs:
             rm -rf traning-agents-nest-api
             git clone git@github.com:Roman-Shubnikov/traning-agents-nest-api.git
             cd traning-agents-nest-api
-            echo ${{ secrets.PRODUCTION_ENV }} | base64 -d > .env.production
-            docker compose --env-file=.env.production up --build -d
+            echo ${{ secrets.PRODUCTION_ENV }} | base64 -d > .env
+            docker compose up --build -d
             cd ..
             rm -rf traning-agents-nest-api
       # - name: run docker compose
