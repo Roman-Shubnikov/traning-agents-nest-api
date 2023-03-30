@@ -7,14 +7,13 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import * as ip from 'ip';
 import { EnvEnum } from '@app/core/enums';
-import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   const config = app.get<ConfigService>(ConfigService);
 
-  const PORT = +(config.get('PORT') ?? 3000);
+  const PORT = +(config.get('WEB_SERVICE_PORT') ?? 3000);
   const NODE_ENV = config.get('NODE_ENV');
   const SWAGGER_THEME = config.get<SwaggerThemeName>('SWAGGER_THEME');
 
