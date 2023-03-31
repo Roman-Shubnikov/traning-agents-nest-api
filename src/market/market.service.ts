@@ -52,7 +52,7 @@ export class MarketService {
     const size = 400;
     const avatar = new Jimp(size, size, backgroundColor)
     const icon_path = this.configService.get<string>('S3_PATH_TO_AVATAR_ICONS') + '/' + icon_name;
-    const iconWithJimp = await Jimp.read('https://' + this.storageService.bucket + '.' + this.configService.get('S3_HOST') + '/' + icon_path)
+    const iconWithJimp = await Jimp.read(this.storageService.bucketPath + '/' + icon_path)
     iconWithJimp.color([{apply: ColorActionName.LIGHTEN, params: [size/2]}])
     avatar.composite(iconWithJimp, (size-iconWithJimp.getWidth()) / 2, (size-iconWithJimp.getHeight()) / 2)
 
@@ -80,12 +80,23 @@ export class MarketService {
 
   }
   async buyColor(user: UserEntity, color: string): Promise<PurchasedColorEntity> {
-    console.log(ColorsAllEnum.includes(color), color)
     if(!ColorsAllEnum.includes(color)) throw new NotFoundException('Цвет не найден в каталоге')
     if(await this.purchasedColorRepository.findOneBy({ color, user: { id: user.id } })) throw new BadRequestException('Цвет уже куплен')
     const cost = +this.configService.get<string>('MARKET_COST_COLOR');
     await this.manageUserMoney(user, ProductsEnum.COLOR, MoneyOperationsEnum['-'], cost)
     return this.purchasedColorRepository.save({ user, color, purchased_at: getTime() })
+  }
+
+  async getMyIcons(user: UserEntity): Promise<{ url_to_icons: string, items: PurchasedIconEntity[]}> {
+    return {
+      url_to_icons: this.storageService.bucketPath + '/' + this.configService.get('S3_PATH_TO_AVATAR_ICONS'),
+      items: await this.purchasedIconRepository.find({ where: { user: { id: user.id} } })
+    }
+  }
+  async getMyColors(user: UserEntity): Promise<{ items: PurchasedColorEntity[]}> {
+    return {
+      items: await this.purchasedColorRepository.find({ where: { user: { id: user.id} } })
+    }
   }
 
   async marketLogger(user: UserEntity, product: ProductsEnum, operation: MoneyOperationsEnum, cost: number): Promise<MarketLogEntity> {

@@ -12,7 +12,7 @@ export class PurchasedColorEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => UserEntity, (user) => user.id, { cascade: true })
+    @ManyToOne(() => UserEntity, (user) => user.purchased_colors, { cascade: true })
     user: UserEntity;
 
     @Column()

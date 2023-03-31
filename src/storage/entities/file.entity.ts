@@ -13,7 +13,7 @@ import {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => UserEntity, (user) => user.id, { cascade: true })
+    @ManyToOne(() => UserEntity, (user) => user.files, { cascade: true })
     owner: UserEntity;
   
     @Column()

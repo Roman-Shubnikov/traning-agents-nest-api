@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { RoleEnum } from '@app/core/enums';
 import { FileEntity } from 'src/storage/entities/file.entity';
+import { PurchasedColorEntity, PurchasedIconEntity } from 'src/market/entities';
 
 @Entity('users')
 export class UserEntity {
@@ -77,7 +78,16 @@ export class UserEntity {
   publicStatus: string;
 
   @OneToMany(() => FileEntity, (file) => file.owner)
+  @JoinColumn()
   files: FileEntity[];
+  
+  @OneToMany(() => PurchasedIconEntity, (icons) => icons.user)
+  @JoinColumn()
+  purchased_icons: PurchasedIconEntity[];
+
+  @OneToMany(() => PurchasedColorEntity, (colors) => colors.user)
+  @JoinColumn()
+  purchased_colors: PurchasedColorEntity[];
 
   @Column({ default: 0 })
   coff_active: number;

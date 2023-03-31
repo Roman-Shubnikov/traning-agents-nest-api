@@ -1,5 +1,6 @@
 import {
   BadGatewayException,
+  ForbiddenException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -31,6 +32,7 @@ export class StorageService {
   private readonly s3: S3Client;
   
   readonly bucket = this.configService.get<string>('S3_STORAGE_BUCKET');
+  readonly bucketPath = 'https://' + this.bucket + '.' + this.configService.get('S3_HOST');
   readonly host = 'https://' + this.configService.get('S3_HOST');
   private readonly logger = new Logger(StorageService.name);
 
@@ -72,12 +74,16 @@ export class StorageService {
       if(count > +this.configService.get('S3_FILE_LIMIT_PER_USER')) {
         const oldNotSavedFile = await this.filesRepository.findOne({ 
           where: {
-            saved: false, owner: user
+            saved: false, 
+            owner: {
+              id: user.id
+            }
           },
           order: {
             created_at: "ASC",
           }
         })
+        if(!oldNotSavedFile) throw new ForbiddenException('Лимит загрузки файлов исчерпан')
         await this.filesRepository.remove(oldNotSavedFile)
       }
 
