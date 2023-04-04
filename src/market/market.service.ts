@@ -49,7 +49,7 @@ export class MarketService {
     if(!await this.purchasedIconRepository.findOneBy({ user: { id: user.id }, icon_name })) throw new ForbiddenException('Указанная иконка не приобретена');
     if(!await this.purchasedIconRepository.findOneBy({ user: { id: user.id }, icon_name })) throw new ForbiddenException('Указанный цвет не приобретён');
   
-    const size = 400;
+    const size = 600;
     const avatar = new Jimp(size, size, backgroundColor)
     const icon_path = this.configService.get<string>('S3_PATH_TO_AVATAR_ICONS_PNG') + '/' + icon_name;
     const iconWithJimp = await Jimp.read(this.storageService.bucketPath + '/' + icon_path)
@@ -61,7 +61,9 @@ export class MarketService {
       algorithm: 'md5',
     })}.png`;
     const path = this.configService.get<string>('S3_PATH_TO_AVATARS') + '/' + filename;
-    return this.storageService.upload(user, path, newBuffer, ImageTypesEnum.PNG);
+    const savedFile: FileEntity & { bucket_path?: string } = await this.storageService.upload(user, path, newBuffer, ImageTypesEnum.PNG)
+    savedFile.bucket_path = this.storageService.bucketPath;
+    return savedFile;
   }
 
   async installAvatar(user: UserEntity, hash: string): Promise<UserEntity> {
