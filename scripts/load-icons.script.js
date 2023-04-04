@@ -1,8 +1,9 @@
+const mainFolder = './28/';
 const testFolder = './28_png/';
 const fs = require('fs');
 const Jimp = require('jimp');
 const sharp = require("sharp")
-const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, GetObjectAclCommand } = require('@aws-sdk/client-s3');
+const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, GetObjectAclCommand, ListObjectsCommand } = require('@aws-sdk/client-s3');
 const replaceColor = require('replace-color')
 let files = fs.readdirSync(testFolder);
 
@@ -43,8 +44,28 @@ async function save(path, buffer) {
 
 // for (let i of files) {
 //   console.log(i, fs.readFileSync(testFolder + i));
-//     save('/icons/28/' + i, fs.readFileSync(testFolder + i))
+//     save('/icons/28/png/' + i, fs.readFileSync(testFolder + i))
 // }
+// for (let i of fs.readdirSync(mainFolder)) {
+//   console.log(i, fs.readFileSync(mainFolder + i));
+//     save('/icons/28/svg/' + i, fs.readFileSync(mainFolder + i))
+// }
+// for(let i of fs.readdirSync(testFolder)) {
+    
+//     console.log(i)
+//     let b = async () => {
+//       try {
+//         await s3.send(new DeleteObjectCommand({Bucket: '244a64f4-roadjedi', Key: '/icons/28/' + i}))
+//         console.log('delete', i)
+//       } catch(error) {
+//         console.log('failed to delete')
+//       }
+//       // const filesss = await s3.send(new ListObjectsCommand({Bucket: '244a64f4-roadjedi', Prefix: '/icons/28/png'}))
+//       // console.log(filesss)
+//     } 
+//     b()
+//     // break;
+//   }
 const a = async () => {
   // const files = await s3.send(new GetObjectCommand({Bucket: '244a64f4-roadjedi', Key: '/icons/28/folder_simple_lock_outline_28.svg'}))
 
@@ -62,4 +83,4 @@ const a = async () => {
   image.write('test.png')
 
 }
-a()
+// a()

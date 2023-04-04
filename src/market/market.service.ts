@@ -38,7 +38,7 @@ export class MarketService {
   ) {}
 
   async getAvalibleIcons(): Promise<string[]> {
-    const icons = await this.storageService.getFolder(this.configService.get('S3_PATH_TO_AVATAR_ICONS'))
+    const icons = await this.storageService.getFolder(this.configService.get('S3_PATH_TO_AVATAR_ICONS_PNG'))
     const icons_names = icons.Contents.map(icon => icon.Key.split('/').at(-1))
     return icons_names;
   }
@@ -51,7 +51,7 @@ export class MarketService {
   
     const size = 400;
     const avatar = new Jimp(size, size, backgroundColor)
-    const icon_path = this.configService.get<string>('S3_PATH_TO_AVATAR_ICONS') + '/' + icon_name;
+    const icon_path = this.configService.get<string>('S3_PATH_TO_AVATAR_ICONS_PNG') + '/' + icon_name;
     const iconWithJimp = await Jimp.read(this.storageService.bucketPath + '/' + icon_path)
     iconWithJimp.color([{apply: ColorActionName.LIGHTEN, params: [size/2]}])
     avatar.composite(iconWithJimp, (size-iconWithJimp.getWidth()) / 2, (size-iconWithJimp.getHeight()) / 2)
@@ -87,8 +87,9 @@ export class MarketService {
     return this.purchasedColorRepository.save({ user, color, purchased_at: getTime() })
   }
 
-  async getMyIcons(user: UserEntity): Promise<{ url_to_icons: string, items: PurchasedIconEntity[]}> {
+  async getMyIcons(user: UserEntity): Promise<{ url_to_png: string, url_to_icons: string, items: PurchasedIconEntity[]}> {
     return {
+      url_to_png: this.storageService.bucketPath + '/' + this.configService.get('S3_PATH_TO_AVATAR_ICONS_PNG'),
       url_to_icons: this.storageService.bucketPath + '/' + this.configService.get('S3_PATH_TO_AVATAR_ICONS'),
       items: await this.purchasedIconRepository.find({ where: { user: { id: user.id} } })
     }
