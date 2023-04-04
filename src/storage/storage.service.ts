@@ -32,8 +32,9 @@ export class StorageService {
   private readonly s3: S3Client;
   
   readonly bucket = this.configService.get<string>('S3_STORAGE_BUCKET');
-  readonly bucketPath = 'https://' + this.bucket + '.' + this.configService.get('S3_HOST');
   readonly host = 'https://' + this.configService.get('S3_HOST');
+  readonly bucketPath = this.host + '/' + this.bucket;
+  
   private readonly logger = new Logger(StorageService.name);
 
   constructor(
