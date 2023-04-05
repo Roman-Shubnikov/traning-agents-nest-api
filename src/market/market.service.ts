@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ImageTypesEnum } from '@app/core/enums';
+import { ImageTypesEnum, RoleEnum } from '@app/core/enums';
 import { UserEntity } from 'src/users/entities';
 import { ConfigService } from '@nestjs/config';
 import { StorageService } from 'src/storage/storage.service';
@@ -70,14 +70,14 @@ export class MarketService {
     const fileInfo = await this.storageService.save(user, hash);
     const cost = +this.configService.get<string>('MARKET_COST_INSTALL_NEW_AVATAR');
     await this.manageUserMoney(user, ProductsEnum.AVATAR, MoneyOperationsEnum['-'], cost)
-    return this.usersRepository.save({ ...user, avatar: fileInfo })
+    return this.usersRepository.save({ id: user.id, avatar: fileInfo })
   }
   async buyIcon(user: UserEntity, icon_name: string): Promise<PurchasedIconEntity> {
     const allIcons = await this.getAvalibleIcons();
     if (!allIcons.includes(icon_name)) throw new NotFoundException('Иконка не найдена в каталоге')
     if(await this.purchasedIconRepository.findOneBy({ user: { id: user.id }, icon_name })) throw new BadRequestException('Иконка уже куплена')
     const cost = +this.configService.get<string>('MARKET_COST_ICON');
-    await this.manageUserMoney(user, ProductsEnum.ICON, MoneyOperationsEnum['-'], cost)
+    console.log(await this.manageUserMoney(user, ProductsEnum.ICON, MoneyOperationsEnum['-'], cost))
     return this.purchasedIconRepository.save({ user, icon_name, purchased_at: getTime() })
 
   }
@@ -112,16 +112,29 @@ export class MarketService {
     })
   }
 
+  async setNickname(user: UserEntity, nickname: string | null): Promise<UserEntity> {
+    if(nickname) {
+      const users_nick = await this.usersRepository.findBy({ nickname });
+      if(users_nick.length) throw new ForbiddenException('Ник уже занят');
+      const cost = this.configService.get('MARKET_COST_INSTALL_NEW_NICKNAME');
+      await this.manageUserMoney(user, ProductsEnum.NICKNAME, MoneyOperationsEnum['-'], cost)
+    }
+    return this.usersRepository.save({ id: user.id, nickname });
+  }
+  
+
   async manageUserMoney(user: UserEntity, productType: ProductsEnum, operation: MoneyOperationsEnum, cost: number): Promise<UserEntity> {
     let money = user.money;
     if (operation === MoneyOperationsEnum['+']) {
       money += cost;
     } else if (operation === MoneyOperationsEnum['-']) {
-      if (money < cost) throw new PreconditionFailedException('Недостаточно средств');
-      money -= cost;
+      if(user.permissions < RoleEnum.SPECIAL) {
+        if (money < cost) throw new PreconditionFailedException('Недостаточно средств');
+        money -= cost;
+      }
     }
     await this.marketLogger(user, productType, operation, cost);
-    return this.usersRepository.save({ ...user, money });
+    return this.usersRepository.save({ id: user.id, money });
   }
 
 }

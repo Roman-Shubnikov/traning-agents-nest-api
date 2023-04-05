@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -12,7 +14,7 @@ import {
 } from '@nestjs/swagger';
 import { User } from '@app/core/decorators';
 import { UserEntity } from 'src/users/entities';
-import { CreateCustomAvatarDto } from './dto';
+import { BuyColorDto, CreateCustomAvatarDto, SetNicknameDto } from './dto';
 import { MarketService } from './market.service';
 import { ColorsAllEnum } from './enums';
 import { ConfigService } from '@nestjs/config';
@@ -40,7 +42,7 @@ export class MarketController {
 
   @Post('buyColor')
   @ApiOperation({ summary: 'Купить цвет' })
-  async buyColor(@User() user: UserEntity, @Body() body) {
+  async buyColor(@User() user: UserEntity, @Body() body: BuyColorDto) {
     await this.marketService.buyColor(user, body.color)
     return true;
   }
@@ -85,6 +87,20 @@ export class MarketController {
     }
     return data;
 
+  }
+
+  @Put('nickname')
+  @ApiOperation({ summary: 'Установить ник' })
+  async setNickname(@User() user: UserEntity, @Body() body: SetNicknameDto) {
+    await this.marketService.setNickname(user, body.nickname)
+    return true;
+  }
+
+  @Delete('nickname')
+  @ApiOperation({ summary: 'Удалить ник' })
+  async deleteNickname(@User() user: UserEntity) {
+    await this.marketService.setNickname(user, null)
+    return true;
   }
 
 
