@@ -54,6 +54,10 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+
+## Deploy 
+- PRODUCTION_ENV закодировать в base64 env файл
+
 ## Мысли
 
 - Чтобы закачивать svg в хранилище S3 необходимо добавлять 
