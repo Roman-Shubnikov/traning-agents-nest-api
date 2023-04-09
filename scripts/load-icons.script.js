@@ -29,8 +29,8 @@ const s3 = new S3Client({
 
 async function save(path, buffer) {
     // try {
-      // await s3.send(new PutObjectCommand({Bucket: '244a64f4-roadjedi', Key: path, Body: buffer, ContentType: 'image/svg+xml'}))
-      await s3.send(new PutObjectCommand({Bucket: '244a64f4-roadjedi', Key: path, Body: buffer, ContentType: 'image/png'}))
+      await s3.send(new PutObjectCommand({Bucket: '244a64f4-roadjedi', Key: path, Body: buffer, ContentType: 'image/svg+xml'}))
+      // await s3.send(new PutObjectCommand({Bucket: '244a64f4-roadjedi', Key: path, Body: buffer, ContentType: 'image/png'}))
 
       console.log(`saved ${path}`);
 
@@ -43,14 +43,14 @@ async function save(path, buffer) {
 
 // let testFiles = files.slice(0, 2);
 
-for (let i of files) {
-  console.log(i, fs.readFileSync(testFolder + i));
-    save('/icons/28/png/' + i, fs.readFileSync(testFolder + i))
-}
-// for (let i of fs.readdirSync(mainFolder)) {
-//   console.log(i, fs.readFileSync(mainFolder + i));
-//     save('/icons/28/svg/' + i, fs.readFileSync(mainFolder + i))
+// for (let i of files) {
+//   console.log(i, fs.readFileSync(testFolder + i));
+//     save('/icons/28/png/' + i, fs.readFileSync(testFolder + i))
 // }
+for (let i of fs.readdirSync(mainFolder)) {
+  console.log(i, fs.readFileSync(mainFolder + i));
+    save('/icons/28/svg/' + i, fs.readFileSync(mainFolder + i))
+}
 // for(let i of fs.readdirSync(testFolder)) {
     
 //     console.log(i)
